@@ -27,10 +27,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-&psk#na5l=p3q8
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+#DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 # Set hosts to allow any app on Railway and the local testing URL
-ALLOWED_HOSTS = ['.vercel.app','127.0.0.1', 'www.locallibrary.es']
+#ALLOWED_HOSTS = ['.vercel.app','127.0.0.1', 'www.locallibrary.es']
 
 # Set CSRF trusted origins to allow any app on Railway and the local testing URL
 CSRF_TRUSTED_ORIGINS = ['https://*.railway.app','https://*.127.0.0.1']
@@ -84,18 +84,18 @@ WSGI_APPLICATION = 'locallibrary.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+#DATABASES = {
+#    'default': {
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': BASE_DIR / 'db.sqlite3',
-	'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('NAME'),
-        'USER': config('USER'),
-        'PASSWORD': config('PASSWORD'),
-        'HOST':'127.0.0.1',
-        'PORT':'3306',
-    }
-}
+#	'ENGINE': 'django.db.backends.mysql',
+#        'NAME': config('NAME'),
+#        'USER': config('USER'),
+#        'PASSWORD': config('PASSWORD'),
+#        'HOST':'127.0.0.1',
+#        'PORT':'3306',
+#    }
+#}
 
 
 # Password validation
@@ -169,3 +169,18 @@ STORAGES = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import os
+# Cargar la variable de entorno. El segundo argumento es
+# el valor que ha de tomarse cuando la variable no esté
+# definida.
+stage = os.getenv("MYPROJECT_STAGE", "development")
+if stage == "production":
+    # Producción.
+    from .settings_production import *
+elif stage == "development":
+    # Desarrollo.
+    from .settings_dev import *
+else:
+    # Arrojar un error si MYPROJECT_STAGE tiene un valor desconocido.
+    raise ValueError("Unknown stage: {stage}")
